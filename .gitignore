@@ -42,4 +42,23 @@ app-example
 /ios
 /android
 
-/.vscode
+# EAS / credentials
+*.keystore
+*.jks
+*.p8
+*.p12
+*.pem
+
+# System junk
+Taxapp/
+*.tmp
+*.ldb
+*.log
+*.cache
+Thumbs.db
+.DS_Store
+
+
+# IDE configs
+.vscode/
+.idea/
