@@ -39,7 +39,7 @@ const MessageInp =()=>{
             className='w-[100px] gap-[20px] flex-1'
             cursorColor={'black'}
             returnKeyType='send'
-        
+            placeholderTextColor={'black'}
           />
 
         <TouchableOpacity activeOpacity={1} onPress={()=>{Alert.alert("Message sent"), setMsg("")}}>

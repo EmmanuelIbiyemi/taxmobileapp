@@ -42,6 +42,7 @@ export default function TINRegiteration() {
         onChangeText={setName}
         cursorColor={"black"}
         inputMode="text"
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -51,6 +52,7 @@ export default function TINRegiteration() {
         onChangeText={setMiddle}
         cursorColor={"black"}
         inputMode="text"
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -60,6 +62,7 @@ export default function TINRegiteration() {
         onChangeText={setLast}
         cursorColor={"black"}
         inputMode="text"
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -69,6 +72,7 @@ export default function TINRegiteration() {
         onChangeText={setMail}
         cursorColor={"black"}
         inputMode="text"
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -78,6 +82,7 @@ export default function TINRegiteration() {
         onChangeText={setBvn}
         cursorColor={"black"}
         inputMode="text"
+        placeholderTextColor={'black'}
       />
 
       <TouchableOpacity

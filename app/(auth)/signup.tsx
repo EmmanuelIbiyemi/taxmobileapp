@@ -1,7 +1,11 @@
 import { View, Text , TouchableOpacity , TextInput, Image, Alert , KeyboardAvoidingView , ScrollView, Platform} from 'react-native'
 import React, { useState } from 'react'
 
-import { router } from 'expo-router'
+import { router } from 'expo-router';
+
+import { Eye } from 'lucide-react-native';
+
+import ToastManager , { Toast } from 'toastify-react-native'
 
 const TopShow = ()=>{
   return(
@@ -25,31 +29,64 @@ const InputFeilds = ()=>{
     const [validatename , setValidname] = useState(false);
     const [validateemail , setValidmail] = useState(false);
     const [validatepass , setValidpass] = useState(false);
+    const [showPass , setShow] = useState(false);
+
+
+    
+    
+    
+        function handleShowPassword(){
+          setShow(true)
+          const timeToShowPass=()=>{
+            setTimeout(()=>{
+                setShow(false)
+              },2000)
+          }
+          timeToShowPass()
+        }
 
 
 
-    // -- Function for sending the user info to public
-    const signupApi =()=>{
-      if (fullName == ""){
-        setValidname(true);
-      } else if (fullName.length > 3){
-        setValidname(false)
+    const signupApi = () => {
+      let isValid = true;
+
+      if (fullName === "" || fullName.length <= 3) {
+        // setValidname(true);
+        Toast.warn('Name empty!', "bottom");
+        console.log("Name is empty");
+        isValid = false;
+      } else {
+        setValidname(false);
       }
-      else if (email == ""){
-        setValidmail(true)
-      } else if (email.length > 3){
-        setValidmail(false)
+
+      if (email === "" || email.length <= 3) {
+        // setValidmail(true);
+        Toast.warn('Invalid Mail!', "bottom");
+        console.log("Inavalid Email")
+        isValid = false;
+      } else {
+        setValidmail(false);
       }
-      else if (password == ""){
-        setValidpass(true)
-      } else if (password.length > 3){
-        setValidpass(false)
+
+      if (password === "" || password.length <= 3) {
+        // setValidpass(true);
+        Toast.warn('Empty Password!', "bottom");
+        console.log("Password Empty")
+        isValid = false;
+      } else {
+        setValidpass(false);
       }
-      else {
-        Alert.alert("Sign Up SucessFull");
+
+      if (fullName === "" && email === "" && password === ""){
+          Toast.error('Put Your Info', 'bottom');
+          console.log("Kindly Fill Up the whole details")
+      }
+
+      if (isValid) {
+        Toast.success('Sign Up Successful!', "top");
         router.navigate("/(auth)/login");
       }
-    }
+};
     
   return(
     <>
@@ -69,7 +106,8 @@ const InputFeilds = ()=>{
                   onChangeText={setName}
                   cursorColor={'black'}
                   style={{borderWidth:1, paddingLeft:20}}
-                  className='bg-gray-200 rounded-xl h-[55px]'
+                  className='bg-gray-100 rounded-xl h-[55px] border-gray-400'
+                  placeholderTextColor={'black'}
                 />
                 { 
                   validatename && <Text className='color-red-600 font-bold'>User Name Empty</Text>
@@ -81,24 +119,37 @@ const InputFeilds = ()=>{
                   onChangeText={setMail}
                   cursorColor={'black'}
                   style={{borderWidth:1, paddingLeft:20}}
-                  className='bg-gray-200 rounded-xl h-[55px]'
+                  className='bg-gray-100 rounded-xl h-[55px] border-gray-400'
+                  placeholderTextColor={'black'}
                 />
                   { 
                     validateemail && <Text className='color-red-600 font-bold'>User Email Empty</Text>
                   }
-                <TextInput
-                  placeholder='Password'
-                  value={password}
-                  onChangeText={setPass}
-                  cursorColor={'black'}
-                  style={{borderWidth:1, paddingLeft:20}}
-                  className='bg-gray-200 rounded-xl h-[55px]'
-                />
+                <View className='flex-row border border-gray-400 bg-gray-100 rounded-xl h-[55px]'>
+                  <TextInput
+                    placeholder='Password'
+                    value={password}
+                    onChangeText={setPass}
+                    cursorColor={'black'}
+                    style={{paddingLeft:20}}
+                    className='flex-[1]'
+                    placeholderTextColor={'black'}
+                    secureTextEntry={!showPass}
+                  />
+                  <TouchableOpacity onPress={()=>{handleShowPassword()}} activeOpacity={0.5}>
+                    <View className='flex-[2] justify-center items-center bg-transparent self-center' style={{paddingHorizontal:10}}>
+                      <Eye 
+                        color={"black"}
+                        size={20}
+                      />
+                    </View>
+                </TouchableOpacity>
+            </View>
                 {
                   validatepass && <Text className='color-red-600 font-bold'>Password Empty</Text>
                 }
               </View>
-              <TouchableOpacity activeOpacity={1} onPress={()=> signupApi()}>
+              <TouchableOpacity activeOpacity={1} onPress={()=> {signupApi()}}>
                 <View className='justify-center items-center bg-yellow-500 p-[20] rounded-3xl w-72 self-center'>
                   <Text className='font-semibold'>
                     Sign up
@@ -125,17 +176,36 @@ const InputFeilds = ()=>{
     </>
   )
 }
+
+import { toastConfig } from '@/components/addons/toasts';
 export default function Signup() {
+
+  const [isRTL, setIsRTL] = useState(false)
+  const [showProgressBar, setShowProgressBar] = useState(true)
+  const [showCloseIcon, setShowCloseIcon] = useState(true)
+
   return (
-    <View className='flex-1 justify-center items-center flex-col bg-emerald-500'>
+    <>
+      <View className='flex-1 justify-center items-center flex-col bg-emerald-500'>
 
-        {/* <View className='w-full h-full'> */}
-          <TopShow />
-        {/* </View> */}
+          {/* <View className='w-full h-full'> */}
+            <TopShow />
+          {/* </View> */}
 
-        {/* <View className='w-full h-full bg-emerald-500'> */}
-          <InputFeilds />
-        {/* </View> */}
-    </View>
+          {/* <View className='w-full h-full bg-emerald-500'> */}
+            <InputFeilds />
+          {/* </View> */}
+      </View>
+
+      <ToastManager 
+        config={toastConfig}
+        position={'bottom'}
+        isRTL={isRTL}
+        showProgressBar={showProgressBar}
+        showCloseIcon={showCloseIcon}
+        animationStyle='fade'
+        useModal={false}
+      />
+    </>
   )
 }

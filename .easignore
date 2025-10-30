@@ -1,0 +1,15 @@
+# Ignore system + cache files
+AppData/
+*.tmp
+*.ldb
+*.log
+*.cache
+Thumbs.db
+.DS_Store
+
+# Ignore local builds
+node_modules/
+.expo/
+build/
+dist/
+web-build/

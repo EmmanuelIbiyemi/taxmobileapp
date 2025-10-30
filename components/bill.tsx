@@ -34,7 +34,7 @@ export default function TaxBill() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-white p-5">
+    <ScrollView className="flex-1 bg-white p-5" scrollEnabled={true}>
       <Text className="text-2xl font-bold mb-5 text-[#1A1A1A]">
         Create Tax Bill
       </Text>
@@ -44,6 +44,8 @@ export default function TaxBill() {
         placeholder="Business Name"
         value={form.businessName}
         onChangeText={(v) => handleChange("businessName", v)}
+        cursorColor={"black"}
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -51,6 +53,8 @@ export default function TaxBill() {
         placeholder="TIN / VAT Number"
         value={form.tin}
         onChangeText={(v) => handleChange("tin", v)}
+        cursorColor={"black"}
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -58,6 +62,8 @@ export default function TaxBill() {
         placeholder="Bill Number"
         value={form.billNumber}
         onChangeText={(v) => handleChange("billNumber", v)}
+        cursorColor={"black"}
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -65,6 +71,8 @@ export default function TaxBill() {
         placeholder="Date (YYYY-MM-DD)"
         value={form.date}
         onChangeText={(v) => handleChange("date", v)}
+        cursorColor={"black"}
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -73,6 +81,8 @@ export default function TaxBill() {
         keyboardType="numeric"
         value={form.totalValue}
         onChangeText={(v) => handleChange("totalValue", v)}
+        cursorColor={"black"}
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -81,6 +91,8 @@ export default function TaxBill() {
         keyboardType="numeric"
         value={form.taxRate}
         onChangeText={(v) => handleChange("taxRate", v)}
+        cursorColor={"black"}
+        placeholderTextColor={'black'}
       />
 
       <TextInput
@@ -88,10 +100,12 @@ export default function TaxBill() {
         placeholder="Currency (e.g. NGN, USD)"
         value={form.currency}
         onChangeText={(v) => handleChange("currency", v)}
+        cursorColor={"black"}
+        placeholderTextColor={'black'}
       />
 
       <TouchableOpacity
-        className="bg-emerald-600 py-4 rounded-lg mt-3 active:opacity-80"
+        className="bg-emerald-600 py-4 rounded-lg mt-1 active:opacity-80"
         onPress={handleCalculate}
         activeOpacity={1}
       >
@@ -101,7 +115,7 @@ export default function TaxBill() {
       </TouchableOpacity>
 
       {result && (
-        <View className="bg-gray-100 rounded-xl mt-5 p-4">
+        <View className="bg-gray-100 rounded-xl mt-2 p-4" style={{borderWidth:1, borderColor:'lightgreen'}}>
           <Text className="text-base text-gray-800 mb-1">
             Tax Value: ₦{result.taxValue.toFixed(2)}
           </Text>
