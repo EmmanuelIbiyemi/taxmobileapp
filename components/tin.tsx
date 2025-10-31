@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert , ImageBackground } from "react-native";
 import { Cross } from "lucide-react-native";
 
 import * as ImagePicker from 'expo-image-picker';
@@ -16,8 +16,8 @@ export default function TINRegiteration() {
     const pickImage = async () => {
       // No permissions request is necessary for launching the image library
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images', 'videos'],
-        allowsEditing: true,
+        mediaTypes: ['images'],
+        // allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
@@ -85,8 +85,19 @@ export default function TINRegiteration() {
         placeholderTextColor={'black'}
       />
 
+      <ImageBackground
+        source={image? { uri: `${image}` } : undefined}
+        style={{ borderRadius: 12, overflow: 'hidden' }}
+        resizeMode="cover"
+      >
+
+
       <TouchableOpacity
-        className="bg-gray-300 py-4 rounded-lg mt-3 h-32 justify-center items-center flex-row gap-3"
+        // className="bg-gray-300 py-4 rounded-lg mt-3 h-32 justify-center items-center flex-row gap-3"
+        className={`flex-1 py-4 rounded-lg mt-3 h-32 justify-center items-center flex-row gap-3 ${
+            image ? '' : 'bg-gray-300'
+          }`}
+
         activeOpacity={1}
         onPress={()=>pickImage()}
       >
@@ -95,6 +106,8 @@ export default function TINRegiteration() {
           Insert Image
         </Text>
       </TouchableOpacity>
+
+      </ImageBackground>
       <TouchableOpacity
         className="bg-emerald-600 py-4 rounded-lg mt-3 active:opacity-80"
         onPress={() => Alert.alert("Infomation submitted")}

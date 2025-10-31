@@ -1,8 +1,13 @@
 
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView , Platform } from "react-native";
+
+import RNDateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 export default function TaxBill() {
+
+
+  
   const [form, setForm] = useState({
     businessName: "",
     tin: "",
@@ -14,6 +19,8 @@ export default function TaxBill() {
   });
 
   const [result, setResult] = useState(null);
+  const [date, setDate] = useState(new Date);
+  const [showDate, setShow] = useState(false);
 
   const handleChange = (key, value) => {
     setForm({ ...form, [key]: value });
@@ -32,6 +39,13 @@ export default function TaxBill() {
       totalWithTax,
     });
   };
+
+  const clockChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+  if (event.type === 'set' && selectedDate) {
+    setDate(selectedDate);
+  }
+  setShow(false); 
+};
 
   return (
     <ScrollView className="flex-1 bg-white p-5" scrollEnabled={true}>
@@ -66,14 +80,17 @@ export default function TaxBill() {
         placeholderTextColor={'black'}
       />
 
-      <TextInput
+
+      <TouchableOpacity
+        onPress={() => {setShow(true)}}
         className="border border-gray-300 rounded-lg px-4 py-3 mb-3"
-        placeholder="Date (YYYY-MM-DD)"
-        value={form.date}
-        onChangeText={(v) => handleChange("date", v)}
-        cursorColor={"black"}
-        placeholderTextColor={'black'}
-      />
+        activeOpacity={1}
+      >
+        <Text style={{ color: 'black' }}>
+          {`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`|| 'Date (YYYY-MM-DD)'}
+        </Text>
+      </TouchableOpacity>
+
 
       <TextInput
         className="border border-gray-300 rounded-lg px-4 py-3 mb-3"
@@ -106,7 +123,7 @@ export default function TaxBill() {
 
       <TouchableOpacity
         className="bg-emerald-600 py-4 rounded-lg mt-1 active:opacity-80"
-        onPress={handleCalculate}
+        onPress={() =>{handleCalculate() , console.log(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`)}}
         activeOpacity={1}
       >
         <Text className="text-white text-center font-semibold text-base">
@@ -124,6 +141,16 @@ export default function TaxBill() {
           </Text>
         </View>
       )}
+
+      {
+        showDate && 
+        <RNDateTimePicker 
+            mode="date"
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            value={date}
+            onChange={clockChange}
+          />
+      }
     </ScrollView>
   );
 }

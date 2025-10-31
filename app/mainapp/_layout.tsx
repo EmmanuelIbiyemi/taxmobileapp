@@ -6,7 +6,7 @@ import { StatusBar , View} from "react-native";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect } from "react";
 // Icons for the tab
-import { Home , Calculator , BookOpenText , User} from "lucide-react-native"
+import { Home , Newspaper , BookOpenText , User} from "lucide-react-native"
 import * as SystemUI from "expo-system-ui";
 
 export default function MainApp() {
@@ -84,7 +84,7 @@ export default function MainApp() {
                return( 
                   <Home 
                     color={'white'}
-                    size={28}
+                    size={24}
                   />
                )
             },
@@ -92,17 +92,17 @@ export default function MainApp() {
         />
         
         <Tabs.Screen 
-          name="taxcalculator"
+          name="article"
           options={{
+            title:"Tax Update",
             tabBarIcon:() =>{
               return(
-                  <Calculator 
+                  <Newspaper 
                     color={'white'} 
-                    size={28} 
+                    size={24} 
                   />
               )
             },
-            headerShown:false,
           }}
         />
 
@@ -114,7 +114,7 @@ export default function MainApp() {
               return(
                   <BookOpenText 
                     color={"white"}
-                    size={28}
+                    size={24}
                   />
               )
             }
@@ -128,7 +128,22 @@ export default function MainApp() {
               return(
                   <User 
                     color={'white'} 
-                    size={28} 
+                    size={24} 
+                  />
+              )
+            }
+          }}
+        />
+        <Tabs.Screen 
+          name="taxcalculator"
+          options={{
+            href:null,
+            title:"taxcalculator",
+            tabBarIcon:() =>{
+              return(
+                  <User 
+                    color={'white'} 
+                    size={24} 
                   />
               )
             }
