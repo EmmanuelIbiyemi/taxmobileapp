@@ -33,13 +33,13 @@ export default function Authlayout(){
             <Stack.Screen 
                 name="signup"
                 options={{
-                    title:"Signup",
+                    title:"",
                 }}
             />
             <Stack.Screen 
                 name="login"
                 options={{
-                    title:"Log in",
+                    title:"",
                 }}
             />
         </Stack>
