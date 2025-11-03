@@ -11,7 +11,7 @@ import { router } from 'expo-router'
 import { Eye } from 'lucide-react-native'
 
 import ToastManager , { Toast }  from 'toastify-react-native';
-import { toastConfig } from '@/components/addons/toasts';
+import { toastConfig } from '@/configings/toasts';
 const TopShow = ()=>{
   return(
     <>
@@ -34,7 +34,6 @@ const InputFeilds = ()=>{
     
     const [validateemail , setValidmail] = useState(false);
     const [validatepass , setValidpass] = useState(false);
-
 
     function handleShowPassword(){
       setShow(true)
@@ -198,6 +197,7 @@ export default function Login() {
   const [isRTL, setIsRTL] = useState(false)
   const [showProgressBar, setShowProgressBar] = useState(true)
   const [showCloseIcon, setShowCloseIcon] = useState(true)
+  
     
   return (
     <>

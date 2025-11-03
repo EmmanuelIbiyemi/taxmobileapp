@@ -15,5 +15,5 @@
     "expo-env.d.ts",
     "tailwind.config.js",
     "nativewind-env.d.ts"
-, "components/addons/toasts.js"  ]
+, "configings/toasts.js", "index.js"  ]
 }

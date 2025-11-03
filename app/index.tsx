@@ -20,31 +20,33 @@ export default function Index(){
             await SystemUI.setBackgroundColorAsync('#047857');
           }
           navgationBar()
-    })
+    }, [])
 
     const replacetoindex =()=>{
       router.replace("/(auth)/signup")
     }
 
-  return (
-
-    <>
-      <SafeAreaView className='flex-1 justify-center items-center bg-emerald-700'>
-          <StatusBar 
-                backgroundColor={'#047857'}
-                barStyle={'light-content'}
-        />
+  try {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#047857' }}>
+        <Text>Loading animation...</Text>
         <LottieView
           source={require('../assets/splashjson/TaxPayment.json')}
           autoPlay
           loop={false}
-          enableSafeModeAndroid
-          onAnimationFinish={()=>{replacetoindex()}}
+          onAnimationFinish={() => replacetoindex()}
           speed={0.5}
-          style={{width: '100%', height: '100%'}}
+          style={{ width: '100%', height: '100%' }}
         />
-    </SafeAreaView>
-    </>
-  )
+      </SafeAreaView>
+    );
+  } catch (error) {
+    console.error("❌ LottieView error:", error);
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#047857' }}>
+        <Text>❌ Error loading animation</Text>
+      </SafeAreaView>
+    );
+  }
 }
 

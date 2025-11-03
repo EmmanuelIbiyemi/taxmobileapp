@@ -55,13 +55,8 @@
       "reactCompiler": true
     },
     "androidNavigationBar": {
-      "visible": true,
+      "visible": "true",
       "barStyle": "dark-content"
-    },
-    "build": {
-      "preview": {
-        "distribution": "internal"
-      }
     },
     "extra": {
       "router": {},

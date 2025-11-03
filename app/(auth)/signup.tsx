@@ -266,7 +266,7 @@ const InputFeilds = ()=>{
 
 }
 
-import { toastConfig } from '@/components/addons/toasts';
+import { toastConfig } from '@/configings/toasts';
 export default function Signup() {
 
   const [isRTL, setIsRTL] = useState(false)
