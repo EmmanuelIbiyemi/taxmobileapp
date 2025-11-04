@@ -48,7 +48,15 @@
         {
           "photosPermission": "Allow Taxparata to access your photos"
         }
-      ]
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "reservedClientId": "167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com",
+          "iosUrlScheme": "com.googleusercontent.apps.167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh"
+        }
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

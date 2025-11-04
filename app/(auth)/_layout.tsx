@@ -1,13 +1,19 @@
 import { Stack } from "expo-router";
 
 import * as SystemUI from 'expo-system-ui'
+import * as NavigationBar from 'expo-navigation-bar'
 import { useEffect } from "react";
+
 
 export default function Authlayout(){
 
     useEffect(()=>{
         async function android_navigation() {
             await SystemUI.setBackgroundColorAsync("whtie");
+            await NavigationBar.setBackgroundColorAsync("white");
+             
+            await NavigationBar.setVisibilityAsync('visible');
+            
         }
 
         android_navigation();

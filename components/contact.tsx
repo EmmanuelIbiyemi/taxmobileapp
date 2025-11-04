@@ -1,100 +1,130 @@
-import { View, Text , TextInput , TouchableOpacity, Alert, FlatList} from 'react-native'
-import React, { useState } from 'react'
-
+import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native'
+import React, { useState, useRef } from 'react'
 import { MessageCircle } from 'lucide-react-native'
 
-const MessageInp =()=>{
-  const [input , setInput] = useState("");
+interface Message {
+  id: string;
+  text: string;
+  from: 'user' | 'bot';
+  timestamp: number;
+}
 
-    return(
-      <>
-        <View className='flex-row rounded-2xl' style={{borderWidth:1, paddingLeft:20}}>
-            <TextInput
-              value={input}
-              onChangeText={setInput}
-              placeholder='Message'
-              inputMode='text'
-              className='w-[100px] gap-[20px] flex-1'
-              cursorColor={'black'}
-              returnKeyType='send'
-              placeholderTextColor={'black'}
-              blurOnSubmit={false}
-            />
+interface MessageInpProps {
+  onSend: (text: string) => void;
+}
 
-          <TouchableOpacity activeOpacity={1} onPress={()=>{console.log("Working")}}>
-            <View className='bg-emerald-600 justify-center items-center p-[20px] rounded-2xl self-end'>
-                <MessageCircle 
-                  color={'white'}
-                  size={21}
-                />
-            </View>
-          </TouchableOpacity>
-        </View>
-      </>
-    )
-  }
+const MessageInp = ({ onSend }: MessageInpProps) => {
+  const [input, setInput] = useState("");
 
-export default function Contact() {
-  const [Message , setMsg] = React.useState<{ id: string; text: string; from: string }[]>([
-    { id: '1', text: "How may we help you ...?", from: "bot" },
-  ]);
-  // const [input, setInput] = React.useState("");
-  const flatListRef = React.useRef<FlatList>(null);
-  const [input , setInput] = useState("");
-  const inputRef = React.useRef<TextInput>(null);
-
-  
   const handleSend = () => {
-    if (!input.trim()) return;
-    const newMessage = { id: Date.now().toString(), text: input.trim(), from: "user" };
-    setMsg((prev) => [...prev, newMessage]);
-    setInput("");
-
-    setTimeout(() => {
-      inputRef.current?.focus();
-      flatListRef.current?.scrollToEnd({ animated: true });
-    }, 100);
-
-    // Auto scroll to bottom
-    setTimeout(() => {
-      flatListRef.current?.scrollToEnd({ animated: true });
-    }, 100);
+    if (input.trim()) {
+      onSend(input.trim());
+      setInput("");
+    }
   };
 
-  const ChatSection =()=>{
-    return(
-      <>
-        <View className='flex-1 pt-[20px]'>
+  return (
+    <>
+      <View className='flex-row rounded-2xl' style={{ borderWidth: 1, paddingLeft: 20 }}>
+        <TextInput
+          value={input}
+          onChangeText={setInput}
+          placeholder='Message'
+          inputMode='text'
+          className='w-[100px] gap-[20px] flex-1'
+          cursorColor={'black'}
+          returnKeyType='send'
+          placeholderTextColor={'black'}
+          blurOnSubmit={false}
+          onSubmitEditing={handleSend}
+        />
 
-          {/* User Sending */}
-          <View className='self-end bg-green-600 rounded-lg px-4 py-3 mb-3' style={{marginHorizontal:10}}>
-              <Text className='color-white'>
-                Helo
-              </Text>
+        <TouchableOpacity activeOpacity={1} onPress={handleSend}>
+          <View className='bg-emerald-600 justify-center items-center p-[20px] rounded-2xl self-end'>
+            <MessageCircle
+              color={'white'}
+              size={21}
+            />
           </View>
-          
-          {/* Firs reply */}
-          <View className='self-start bg-slate-600  px-4 py-3 mb-3 rounded-xl' style={{marginHorizontal:10}}>
-            <Text className='color-white'>
-              How May we help you ...?
-            </Text>
-          </View>
-        </View>
-      </>
-    )
-  }
+        </TouchableOpacity>
+      </View>
+    </>
+  )
+}
+
+export default function Contact() {
+  const [messages, setMessages] = useState<Message[]>([
+    { id: '1', text: "How may we help you ...?", from: "bot", timestamp: Date.now() },
+  ]);
+  
+  const flatListRef = useRef<FlatList>(null);
+
+  const handleSend = (text: string) => {
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      text: text,
+      from: "user",
+      timestamp: Date.now()
+    };
+    
+    setMessages((prev) => [...prev, newMessage]);
+
+    // Auto scroll to bottom after sending
+    setTimeout(() => {
+      flatListRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+
+    // Simulate bot response (remove this in production)
+    setTimeout(() => {
+      const botReply: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Thanks for your message! We'll get back to you soon.",
+        from: "bot",
+        timestamp: Date.now()
+      };
+      setMessages((prev) => [...prev, botReply]);
+      
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }, 1000);
+  };
+
+  const renderMessage = ({ item }: { item: Message }) => {
+    const isUser = item.from === 'user';
+    
+    return (
+      <View
+        className={`px-4 py-3 mb-3 rounded-xl max-w-[80%] ${
+          isUser ? 'self-end bg-green-600' : 'self-start bg-slate-600'
+        }`}
+        style={{ marginHorizontal: 10 }}
+      >
+        <Text className='color-white text-[15px]'>
+          {item.text}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <>
       <View className='flex-1 bg-white'>
-
         <View className='flex-1'>
-          <ChatSection />
-        </View>
-        <View className='mb-[15px]' style={{paddingHorizontal:10}}>
-          <MessageInp />
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            renderItem={renderMessage}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{ paddingTop: 20, paddingBottom: 10 }}
+            showsVerticalScrollIndicator={false}
+            onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+          />
         </View>
 
+        <View className='mb-[15px]' style={{ paddingHorizontal: 10 }}>
+          <MessageInp onSend={handleSend} />
+        </View>
       </View>
     </>
   )

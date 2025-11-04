@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { LogOut, Settings, Mail, User, ShieldCheck } from "lucide-react-native";
+import { router } from "expo-router";
 
 export default function UserProfile() {
   const user = {
@@ -30,9 +31,9 @@ export default function UserProfile() {
       <View className="w-[90%] mt-6">
         {[
           { icon: User, title: "My Profile" },
-          { icon: Mail, title: "Messages", badge: 2 },
-          { icon: Settings, title: "Settings" },
-          { icon: ShieldCheck, title: "Terms & Privacy Policy" },
+          { icon: Mail, title: "Messages", badge: 2 , paths:''},
+          { icon: Settings, title: "Settings" , paths:'/profile/setting'},
+          { icon: ShieldCheck, title: "Terms & Privacy Policy" , paths:'/profile/terms'},
         ].map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -44,6 +45,7 @@ export default function UserProfile() {
               shadowRadius: 4,
               elevation: 3,
             }}
+            onPress={()=>router.navigate(`${item.paths}`)}
           >
             <item.icon color="#16a34a" size={22} />
             <Text className="ml-4 text-[16px] text-[#1a1a1a] flex-1">{item.title}</Text>
@@ -58,7 +60,7 @@ export default function UserProfile() {
       </View>
 
       {/* Logout Button */}
-      <TouchableOpacity activeOpacity={0.9} className="flex-row items-center mt-5 mb-10">
+      <TouchableOpacity activeOpacity={0.9} className="flex-row items-center mt-5 mb-10" onPress={()=>router.replace("/(auth)/login")}>
         <LogOut color="#dc2626" size={20} />
         <Text className="text-red-600 ml-2 font-semibold">Logout</Text>
       </TouchableOpacity>

@@ -4,12 +4,20 @@ import React, { useState } from 'react'
 import { router } from 'expo-router';
 
 import { Eye } from 'lucide-react-native';
+import { useEffect } from 'react';
 
 import ToastManager , { Toast } from 'toastify-react-native';
 
 // icons image
 import '@/assets/auth_images/facebook-icon.png'
-import '@/assets/auth_images/google-color-icon.png'
+import '@/assets/auth_images/google-color-icon.png';
+
+// For the auth with firebase
+// import { auth } from "@/configings/firebaseConfig"
+import { GoogleAuthProvider , signInWithCredential } from 'firebase/auth';
+
+// import * as WebBrowser from "expo-web-browser";
+// import * as Google from "expo-auth-session/providers/google";
 
 const TopShow = ()=>{
   return(
@@ -25,6 +33,7 @@ const TopShow = ()=>{
 }
 
 
+// WebBrowser.maybeCompleteAuthSession();
 const InputFeilds = ()=>{
     const [fullName , setName ] = useState("");
     const [email , setMail] = useState("");
@@ -34,6 +43,28 @@ const InputFeilds = ()=>{
     const [validateemail , setValidmail] = useState(false);
     const [validatepass , setValidpass] = useState(false);
     const [showPass , setShow] = useState(false);
+
+    //  const [request, response, promptAsync] = Google.useAuthRequest({
+    //   androidClientId: "167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com",
+    //   iosClientId: "167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com",
+    //   clientId:"167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com",
+    //   responseType: "token",
+    // });
+
+      
+      
+      // useEffect(() => {
+      //   if (response?.type === "success") {
+          
+      //     const { id_token } = response.params;
+
+      //     const credential = GoogleAuthProvider.credential(id_token);
+      //     signInWithCredential(auth, credential)
+      //       .then((user) => console.log("✅ Firebase user:", user))
+      //       .catch((error) => console.error("❌ Firebase error:", error));
+
+      //   }
+      // }, [response]);
 
   
       function handleShowPassword(){
@@ -66,7 +97,7 @@ const InputFeilds = ()=>{
         setValidname(false);
       }
 
-      if ( mail === "" || mail.includes("@") || mail.length <= 3) {
+      if ( mail === "" || mail.length <= 3) {
         // setValidmail(true);
         Toast.warn('Invalid Mail!', "top");
         console.log("Inavalid Email")
@@ -97,13 +128,13 @@ const InputFeilds = ()=>{
 
     const handleSignup = async () => {
       const userData = {
-        fullName: fullName,
+        Username: fullName,
         email: email,
         password: password
       };
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/signup", {
+        const response = await fetch("https://taxparabackend.onrender.com/signup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -114,17 +145,34 @@ const InputFeilds = ()=>{
         const data = await response.json();
         console.log("Signup Response:", data);
 
-        if (response.ok) {
+        if (data.report === 200) {
           // Alert.alert("Success", "Account created successfully!");
+          setName("");
+          setMail("");
+          setPass("");
           Toast.success("Account created successfully!", "top");
-          router.navigate("/(auth)/login");
-        } else {
+          const timer = setTimeout(() => {
+              router.navigate("/(auth)/login");
+          }, 500)
+          
+          return () => clearTimeout(timer);
+        } 
+        if (data.report === 500){
+          Toast.warn("User Already Exist!", "top");
+          const timer = setTimeout(() => {
+              router.navigate("/(auth)/login");
+          }, 500)
+
+          return ()=>clearTimeout(timer)
+        }
+        else {
           // Alert.alert("Error", data.Error || "Signup failed");
           Toast.error("SignUp Failed", "top")
         }
       } catch (error) {
-        console.error("Network Error:", error);
-        Alert.alert("Error", "Unable to reach server. Make sure backend is running.");
+        // console.error("Network Error:", error);
+        // Alert.alert("Error", "Unable to reach server. Make sure backend is running.");
+        Toast.error("Network Error","top")
       }
     };
 
@@ -157,6 +205,7 @@ const InputFeilds = ()=>{
           <TouchableOpacity
             activeOpacity={0.8}
             className="bg-white rounded-3xl border border-gray-300 w-[70px] h-[70px] justify-center items-center shadow-2xl shadow-green-400 p-4"
+            // onPress={()=>promptAsync()}
           >
             <Image
               source={require('@/assets/auth_images/google-color-icon.png')}
@@ -221,7 +270,7 @@ const InputFeilds = ()=>{
                   onChangeText={setPass}
                   cursorColor={'black'}
                   style={{ paddingLeft: 20 }}
-                  className="flex-[1]"
+                  className="flex-[1] color-black"
                   placeholderTextColor={'black'}
                   secureTextEntry={!showPass}
                 />

@@ -15,15 +15,12 @@ export default function MainApp() {
 
   useEffect(()=>{
     const navgationBar = async ()=>{
-      // await NavigationBar.setButtonStyleAsync('dark')
-      // await NavigationBar.setBackgroundColorAsync('green')
+      await NavigationBar.setButtonStyleAsync('light')
+      await NavigationBar.setBackgroundColorAsync('green')
 
-      // await NavigationBar.setVisibilityAsync('visible')
+      await NavigationBar.setVisibilityAsync('visible')
 
       await SystemUI.setBackgroundColorAsync('green');
-      await NavigationBar.setBorderColorAsync('green');
-      await NavigationBar.setButtonStyleAsync('light');
-      await NavigationBar.setVisibilityAsync('visible');
     }
 
     navgationBar();
@@ -61,7 +58,7 @@ export default function MainApp() {
             alignContent:'center',
             height:75,
             backgroundColor:'green',
-            elevation:0,
+            elevation:0
           },
           tabBarLabelStyle:{
             fontSize:13

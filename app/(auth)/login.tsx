@@ -4,7 +4,8 @@ import {
         TextInput,
         TouchableOpacity,
         Image,
-        ScrollView
+        ScrollView,
+        Alert
         } from 'react-native'
 import React, { useState } from 'react'
 import { router } from 'expo-router'
@@ -12,6 +13,9 @@ import { Eye } from 'lucide-react-native'
 
 import ToastManager , { Toast }  from 'toastify-react-native';
 import { toastConfig } from '@/configings/toasts';
+
+
+
 const TopShow = ()=>{
   return(
     <>
@@ -34,6 +38,10 @@ const InputFeilds = ()=>{
     
     const [validateemail , setValidmail] = useState(false);
     const [validatepass , setValidpass] = useState(false);
+
+
+ 
+
 
     function handleShowPassword(){
       setShow(true)
@@ -69,10 +77,48 @@ const InputFeilds = ()=>{
               console.log("Kindly Fill Up the whole details")
           }
           if (isValid) {
-            Toast.success('Login Successful!', "top")
-            router.replace("/mainapp/mainIndex")
+            handleLogin()
           }
-    }
+    };
+
+    const handleLogin = async () => {
+          const userData = {
+            email: email,
+            password: password
+          };
+    
+          try {
+            const response = await fetch("https://taxparabackend.onrender.com/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(userData),
+            });
+    
+            const data = await response.json();
+            console.log("Login Response:", data);
+    
+            if (data.Error === "null") {
+              // Alert.alert("Success", "Account created successfully!");
+              Toast.success("Login successfully!", "top");
+              router.replace("/mainapp/mainIndex");
+            } else if (data.Error === "list index out of range"){
+               Toast.warn("User Don't Exist!", "top");
+               const timer = setTimeout(() => {
+                  router.back()
+              }, 1000)
+    
+              return ()=>clearTimeout(timer)
+            } 
+            else {
+              Toast.error("Login Failed", "top")
+            }
+          } catch (error) {
+            // console.error("Network Error:", error);
+            Toast.error("NetWork Error", "top");
+          }
+        };
 
   return(
     <>
@@ -94,6 +140,7 @@ const InputFeilds = ()=>{
                       <TouchableOpacity 
                         activeOpacity={0.8}
                         className='bg-white rounded-3xl border border-gray-300 w-[70px] h-[70px] justify-center items-center shadow-2xl shadow-green-400 p-4'
+                        // onPress={()=>promptAsync()}
                       >
                         <View>
                           <Image 
@@ -150,7 +197,7 @@ const InputFeilds = ()=>{
                   onChangeText={setPass}
                   cursorColor={'black'}
                   style={{paddingLeft:20}}
-                  className='flex-[1]'
+                  className='flex-[1] color-black'
                   placeholderTextColor={'black'}
                   secureTextEntry={!showPass}
                 />
