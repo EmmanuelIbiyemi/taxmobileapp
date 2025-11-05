@@ -3,6 +3,11 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert , ImageBackg
 import { Cross } from "lucide-react-native";
 
 import * as ImagePicker from 'expo-image-picker';
+import { Toast } from "toastify-react-native";
+import ToastManager from "toastify-react-native/components/ToastManager";
+import { toastConfig  } from "@/configings/toasts";
+
+import { send } from '@emailjs/react-native';
 
 export default function TINRegiteration() {
       const [firstName , setName] = useState("");
@@ -12,6 +17,11 @@ export default function TINRegiteration() {
       const [bvn , setBvn] = useState("");
 
       const [image, setImage] = useState<string | null>(null);
+
+      // For the toast only
+      const [isRTL, setIsRTL] = useState(false)
+        const [showProgressBar, setShowProgressBar] = useState(true)
+        const [showCloseIcon, setShowCloseIcon] = useState(true)
 
     const pickImage = async () => {
       // No permissions request is necessary for launching the image library
@@ -29,6 +39,48 @@ export default function TINRegiteration() {
       }
     };
 
+    const handleSendEmail = async () => {
+      try {
+        console.log("Send InfoMation")
+        await send("service_km13956","template_t3ppd9i",{
+            title: "Tax Identification Number",
+            name: "Taxparater",
+            time:  Date.now(),
+            message: "Send",
+            email: email,
+      },
+      { publicKey: 'wImTbxEVtxysCcxTG' }
+    );
+        // Alert.alert('Success', 'Email sent!');
+        Toast.success("Info Sent Successfully","top")
+      } catch (error) {
+        Toast.error("Error Sending Info", "top")
+        console.error(error);
+      }
+  };
+
+
+
+
+
+    const htmlMail = `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2>TaxApp <span style="color:#1A1A1A;">TIN Registration</span> 🚀</h2>
+            <p>First Name: ${firstName}</p>
+            <p>Middle Name: ${middleName}</p>
+            <p>Last Name: ${lastname}</p>
+            <p>Register Email Address: ${email}</p>
+            <p>Register BVN: ${bvn}</p>
+            <div>
+            <p>Users Image: </p>
+              <img src="${image}" alt="Description of image" />
+            </div>
+              <ul>
+              <li>Email: taxparta@gmail.com</li>
+              <li>Plan: TIN REGISTRATION</li>
+            </ul>
+        </div>
+      `
   return (
     <ScrollView className="flex-1 bg-white p-5" contentContainerStyle={{justifyContent:'center'}}>
       <Text className="text-2xl font-bold mb-5 text-[#1A1A1A]">
@@ -110,13 +162,23 @@ export default function TINRegiteration() {
       </ImageBackground>
       <TouchableOpacity
         className="bg-emerald-600 py-4 rounded-lg mt-3 active:opacity-80"
-        onPress={() => Alert.alert("Infomation submitted")}
+        onPress={() => handleSendEmail()}
         activeOpacity={1}
       >
         <Text className="text-white text-center font-semibold text-base">
           Submit
         </Text>
       </TouchableOpacity>
+
+       <ToastManager 
+              config={toastConfig}
+              position={'bottom'}
+              isRTL={isRTL}
+              showProgressBar={showProgressBar}
+              showCloseIcon={showCloseIcon}
+              animationStyle='fade'
+              useModal={false}
+            />
 
     </ScrollView>
   );

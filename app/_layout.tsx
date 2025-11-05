@@ -6,6 +6,7 @@ import { StatusBar } from "react-native";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect } from "react";
 
+import { AuthProvider } from "@/configings/profileContext/profileCon"
 
 export default function RootLayout() {
 
@@ -27,29 +28,30 @@ export default function RootLayout() {
         backgroundColor={'#10b981'}
         barStyle={'light-content'}
       />
-
-
-    <Stack 
-      screenOptions={{
-        headerShown:false
-      }}
-    >
-      <Stack.Screen 
-        name="index"
-        options={{
-          headerShown:false
-        }}
-      />
-
-
-        {/* FORBIDDEN ROUTES */}
+      
+      <AuthProvider>
+        <Stack 
+          screenOptions={{
+            headerShown:false
+          }}
+        >
           <Stack.Screen 
-            name="+not-found"
+            name="index"
             options={{
               headerShown:false
             }}
           />
-      </Stack>
+
+
+            {/* FORBIDDEN ROUTES */}
+              <Stack.Screen 
+                name="+not-found"
+                options={{
+                  headerShown:false
+                }}
+              />
+          </Stack>
+      </AuthProvider>
     
     </>
   );

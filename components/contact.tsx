@@ -58,14 +58,22 @@ export default function Contact() {
   ]);
   
   const flatListRef = useRef<FlatList>(null);
+  const [botRepling , setBot] = useState("")
 
   const handleSend = (text: string) => {
+
     const newMessage: Message = {
       id: Date.now().toString(),
       text: text,
       from: "user",
       timestamp: Date.now()
     };
+
+    if(text.includes("Hello")){
+      setBot("Welcome To Taxparata")
+    } else {
+      setBot("Thanks for your message! We'll get back to you soon.")
+    }
     
     setMessages((prev) => [...prev, newMessage]);
 
@@ -78,7 +86,7 @@ export default function Contact() {
     setTimeout(() => {
       const botReply: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Thanks for your message! We'll get back to you soon.",
+        text: botRepling,
         from: "bot",
         timestamp: Date.now()
       };

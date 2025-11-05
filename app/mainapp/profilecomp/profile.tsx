@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { LogOut, Settings, Mail, User, ShieldCheck } from "lucide-react-native";
 import { router } from "expo-router";
 
+
+import { useAuth } from "@/configings/profileContext/profileCon";
 export default function UserProfile() {
+
+    const { userinfo } = useAuth() as any
+
   const user = {
-    name: "ABIMBOLA",
-    email: "abims2642@gmail.com",
+    name: userinfo?.name,
+    email: userinfo?.email,
     avatar: "https://picsum.photos/200", // You can replace with your own image or uploaded one
   };
 
+
   return (
-    <ScrollView className="flex-1 bg-[#f5f6f5]" contentContainerStyle={{ alignItems: "center" }}>
+    <ScrollView className="flex-1 bg-[#f5f6f5]" contentContainerStyle={{ alignItems: "center" }} showsVerticalScrollIndicator={false} scrollEnabled={false}>
       {/* Header Section */}
       <View className="w-full h-[200px] rounded-b-[100px] items-center justify-center" style={{backgroundColor:'green'}}>
         <TouchableOpacity activeOpacity={0.8}>
@@ -32,8 +38,8 @@ export default function UserProfile() {
         {[
           { icon: User, title: "My Profile" },
           { icon: Mail, title: "Messages", badge: 2 , paths:''},
-          { icon: Settings, title: "Settings" , paths:'/profile/setting'},
-          { icon: ShieldCheck, title: "Terms & Privacy Policy" , paths:'/profile/terms'},
+          { icon: Settings, title: "Settings" , paths:'/mainapp/profilecomp/setting'},
+          { icon: ShieldCheck, title: "Terms & Privacy Policy" , paths:true},
         ].map((item, index) => (
           <TouchableOpacity
             key={index}

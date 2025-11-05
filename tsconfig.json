@@ -15,5 +15,5 @@
     "expo-env.d.ts",
     "tailwind.config.js",
     "nativewind-env.d.ts"
-, "configings/toasts.js", "index.js"  ]
+, "configings/toasts.js", "index.js", "configings/profileContext/profileCon.js"  ]
 }

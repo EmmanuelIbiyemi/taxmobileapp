@@ -9,30 +9,35 @@ export default function ProfileLayout() {
         screenOptions={
             {
                 headerStyle:{
-                    backgroundColor:"green"
+                    backgroundColor:"green",
                 },
-                headerTitleAlign:'center'
+                headerTitleAlign:'center',
+                headerTintColor:"white",
+                headerShadowVisible:false,
+                headerTitleStyle:{
+                    color:"white"
+                }
             }
         }
     >
         <Stack.Screen 
-            name='settings'
+            name='profile'
+            options={{
+                title:"Profile"
+            }}
+        />
+        <Stack.Screen 
+            name='setting'
             options={{
                 title:"Settings",
-                headerTitle: ()=>{
-                    return(
-                        <View>
-                            <Text>
-                                Settings
-                            </Text>
-                        </View>
-                )}
+                headerTintColor:"white"
             }}
         />
         <Stack.Screen 
             name='terms'
             options={{
-                title:"Terms & Privacy Policy"
+                title:"Terms & Privacy Policy",
+                headerTintColor:"white"
             }}
         />
         </Stack>

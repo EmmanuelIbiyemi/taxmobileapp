@@ -12,12 +12,13 @@ import ToastManager , { Toast } from 'toastify-react-native';
 import '@/assets/auth_images/facebook-icon.png'
 import '@/assets/auth_images/google-color-icon.png';
 
-// For the auth with firebase
-// import { auth } from "@/configings/firebaseConfig"
-import { GoogleAuthProvider , signInWithCredential } from 'firebase/auth';
+//========================NOW IT'S SUPABASE
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin'
 
-// import * as WebBrowser from "expo-web-browser";
-// import * as Google from "expo-auth-session/providers/google";
+import { supabase } from "@/configings/supaConfig"
 
 const TopShow = ()=>{
   return(
@@ -44,28 +45,38 @@ const InputFeilds = ()=>{
     const [validatepass , setValidpass] = useState(false);
     const [showPass , setShow] = useState(false);
 
-    //  const [request, response, promptAsync] = Google.useAuthRequest({
-    //   androidClientId: "167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com",
-    //   iosClientId: "167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com",
-    //   clientId:"167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com",
-    //   responseType: "token",
-    // });
+    GoogleSignin.configure({
+            webClientId: '167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com',
+    })
 
-      
-      
-      // useEffect(() => {
-      //   if (response?.type === "success") {
-          
-      //     const { id_token } = response.params;
 
-      //     const credential = GoogleAuthProvider.credential(id_token);
-      //     signInWithCredential(auth, credential)
-      //       .then((user) => console.log("✅ Firebase user:", user))
-      //       .catch((error) => console.error("❌ Firebase error:", error));
+    const googleOAuth = async () => {
+            try {
+              console.log("Am working")
+              await GoogleSignin.hasPlayServices()
+              const response = await GoogleSignin.signIn()
+              console.log(response)
 
-      //   }
-      // }, [response]);
 
+              const idToken = response?.data?.idToken
+              if (idToken) {
+                const { data, error } = await supabase.auth.signInWithIdToken({
+                  provider: 'google',
+                  token: `${response?.data?.idToken}`,
+                })
+                console.log(error, data)
+              }
+            } catch (error: any) {
+              if (error.code === statusCodes.IN_PROGRESS) {
+                // operation (e.g. sign in) is in progress already
+              } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // play services not available or outdated
+              } else {
+                // some other error happened
+                console.log(error);
+              };
+            }
+          }
   
       function handleShowPassword(){
         setShow(true)
@@ -205,21 +216,11 @@ const InputFeilds = ()=>{
           <TouchableOpacity
             activeOpacity={0.8}
             className="bg-white rounded-3xl border border-gray-300 w-[70px] h-[70px] justify-center items-center shadow-2xl shadow-green-400 p-4"
-            // onPress={()=>promptAsync()}
+            onPress={()=>{googleOAuth()}}
           >
             <Image
               source={require('@/assets/auth_images/google-color-icon.png')}
               className="w-[25px] h-[25px]"
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            activeOpacity={0.8}
-            className="bg-white rounded-3xl border border-gray-300 w-[70px] h-[70px] justify-center items-center shadow-2xl shadow-green-400 p-4"
-          >
-            <Image
-              source={require('@/assets/auth_images/facebook-icon.png')}
-              className="w-[45px] h-[45px]"
             />
           </TouchableOpacity>
 

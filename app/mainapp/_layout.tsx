@@ -118,9 +118,9 @@ export default function MainApp() {
           }}
         />
         <Tabs.Screen 
-          name="profile"
+          name="profilecomp"
           options={{
-            title:"Profile",
+            title:"",
             tabBarIcon:() =>{
               return(
                   <User 
@@ -128,14 +128,15 @@ export default function MainApp() {
                     size={24} 
                   />
               )
-            }
+            },
+            headerShown:false
           }}
         />
         <Tabs.Screen 
-          name="taxcalculator"
+          name="profile"
           options={{
             href:null,
-            title:"taxcalculator",
+            title:"",
             tabBarIcon:() =>{
               return(
                   <User 
@@ -143,10 +144,10 @@ export default function MainApp() {
                     size={24} 
                   />
               )
-            }
+            },
+            headerShown:false
           }}
         />
-
       </Tabs>
     
     </>

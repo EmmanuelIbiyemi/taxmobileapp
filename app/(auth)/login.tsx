@@ -15,6 +15,23 @@ import ToastManager , { Toast }  from 'toastify-react-native';
 import { toastConfig } from '@/configings/toasts';
 
 
+//========================NOW IT'S SUPABASE
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin'
+
+
+import appleAuth, {
+  AppleRequestScope,
+  AppleRequestOperation,
+} from '@invertase/react-native-apple-authentication';
+
+
+
+import { supabase } from "@/configings/supaConfig"
+
+import { useAuth } from '@/configings/profileContext/profileCon';
 
 const TopShow = ()=>{
   return(
@@ -30,6 +47,7 @@ const TopShow = ()=>{
 }
 
 
+
 const InputFeilds = ()=>{
     const [email , setMail] = useState("");
     const [password , setPass] = useState("");
@@ -39,9 +57,67 @@ const InputFeilds = ()=>{
     const [validateemail , setValidmail] = useState(false);
     const [validatepass , setValidpass] = useState(false);
 
+        const { setUser } = useAuth() as any;
 
  
+      GoogleSignin.configure({
+        // scopes:[""],
+        webClientId:'167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com'
+      })
+      
+      const googleOAuth = async () => {
+        try {
+          console.log("Starting The supapapa")
+          await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true })
+          const response = await GoogleSignin.signIn()
 
+          const code = response?.type
+          if (code === "success") {
+            const { data, error } = await supabase.auth.signInWithIdToken({
+              provider: 'google',
+              token: `${response.data?.idToken}`,
+            })
+            console.log(error, data)
+          }
+        } catch (error: any) {
+          if (error.code === statusCodes.IN_PROGRESS) {
+            // operation (e.g. sign in) is in progress already
+          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+            // play services not available or outdated
+          } else {
+            // some other error happened
+            console.log(error)
+          }
+        }
+      }
+
+      const appleOAuth = async () => {
+        try {
+          console.log("Starting The supapapa appleAuth")
+          const response = await appleAuth.performRequest({
+            requestedOperation: AppleRequestOperation.LOGIN,
+            requestedScopes: [AppleRequestScope.EMAIL, AppleRequestScope.FULL_NAME],
+          });
+
+          const code = response?.identityToken
+          if (code === "success") {
+            const { data, error } = await supabase.auth.signInWithIdToken({
+              provider: 'apple',
+              token: `${response?.identityToken}`,
+            })
+            console.log(error, data)
+          }
+        } catch (error: any) {
+          if (error.code === statusCodes.IN_PROGRESS) {
+            // operation (e.g. sign in) is in progress already
+          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+            // play services not available or outdated
+          } else {
+            // some other error happened
+            console.log(error)
+          }
+        }
+      }
 
     function handleShowPassword(){
       setShow(true)
@@ -97,11 +173,16 @@ const InputFeilds = ()=>{
             });
     
             const data = await response.json();
+            setUser({
+              "name": data.Users[0][0],
+              "email":  data.Users[0][1]
+            })
             console.log("Login Response:", data);
     
             if (data.Error === "null") {
               // Alert.alert("Success", "Account created successfully!");
               Toast.success("Login successfully!", "top");
+              
               router.replace("/mainapp/mainIndex");
             } else if (data.Error === "list index out of range"){
                Toast.warn("User Don't Exist!", "top");
@@ -140,7 +221,7 @@ const InputFeilds = ()=>{
                       <TouchableOpacity 
                         activeOpacity={0.8}
                         className='bg-white rounded-3xl border border-gray-300 w-[70px] h-[70px] justify-center items-center shadow-2xl shadow-green-400 p-4'
-                        // onPress={()=>promptAsync()}
+                        onPress={()=>googleOAuth()}
                       >
                         <View>
                           <Image 
@@ -153,18 +234,7 @@ const InputFeilds = ()=>{
                       <TouchableOpacity 
                         activeOpacity={0.8}
                         className='bg-white rounded-3xl border border-gray-300 w-[70px] h-[70px] justify-center items-center shadow-2xl shadow-green-400 p-4'
-                      >
-                        <View>
-                          <Image 
-                            source={require("@/assets/auth_images/facebook-icon.png")}
-                            className="w-[45px] h-[45px]"
-                          />
-                        </View>
-                      </TouchableOpacity>
-            
-                      <TouchableOpacity 
-                        activeOpacity={0.8}
-                        className='bg-white rounded-3xl border border-gray-300 w-[70px] h-[70px] justify-center items-center shadow-2xl shadow-green-400 p-4'
+                        onPress={()=>appleOAuth()}
                       >
                         <View>
                           <Image 
@@ -225,7 +295,7 @@ const InputFeilds = ()=>{
                     <Text className='color-black font-semibold'>
                       Don't Have an account Register
                     </Text>
-                    <TouchableOpacity activeOpacity={1} onPress={()=>{router.back()}}>
+                    <TouchableOpacity activeOpacity={1} onPress={()=>{router.replace('/(auth)/signup')}}>
                       <View>
                         <Text className='color-yellow-400 font-semibold'>
                           Signup
