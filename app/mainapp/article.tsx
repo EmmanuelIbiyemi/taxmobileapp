@@ -1,6 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
 import React from "react";
-
+import {router} from 'expo-router'
 const arrayBlog = [
   {
     id: 1,
@@ -37,10 +37,14 @@ const DisplayArticle = () => {
       renderItem={({ item }) => (
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => console.log("Opening:", item.blogtitle)}
+          onPress={() => {router.push({
+             pathname: '/mainapp/[blog]',
+            params: { id: item.id, title: item.blogtitle, image: item.imageblog, content: item.blog }
+
+          })}}
         >
           <View
-            className="flex-row items-center bg-white rounded-2xl mx-5 my-3"
+            className="flex-row items-center bg-white rounded-[10px] mx-5 my-3"
             style={{
               elevation: 5,
               shadowColor: "#000",
@@ -52,10 +56,10 @@ const DisplayArticle = () => {
             <Image
               source={{ uri: item.imageblog }}
               style={{
-                width: 120,
-                height: 120,
-                borderTopLeftRadius: 16,
-                borderBottomLeftRadius: 16,
+                width: 125,
+                height: 125,
+                borderTopLeftRadius: 10,
+                borderBottomLeftRadius: 10,
               }}
             />
             <View className="flex-1 p-3">

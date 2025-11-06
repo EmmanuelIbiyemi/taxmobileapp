@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifer":"com.abefe.Taxapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -52,8 +53,8 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "reservedClientId": "167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com",
-          "iosUrlScheme": "com.googleusercontent.apps.167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh"
+          "reservedClientId": "com.googleusercontent.apps.167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh",
+          "iosUrlScheme": "com.googleusercontent.apps.167960938593-ivmc62af96lrcsko8ha9s6pvc6bfrvuv"
         }
       ],
       "expo-web-browser"

@@ -25,7 +25,7 @@ const MessageInp = ({ onSend }: MessageInpProps) => {
 
   return (
     <>
-      <View className='flex-row rounded-2xl' style={{ borderWidth: 1, paddingLeft: 20 }}>
+      <View className='flex-row rounded-2xl' style={{ borderWidth: 1, paddingLeft: 20 ,marginTop:10}}>
         <TextInput
           value={input}
           onChangeText={setInput}
@@ -52,13 +52,43 @@ const MessageInp = ({ onSend }: MessageInpProps) => {
   )
 }
 
+const getBotReply = (text:string) => {
+  const message = text.toLowerCase();
+
+  if (message.includes("hello") || message.includes("hi")) {
+    return "👋 Welcome to TaxParata! I’m your virtual tax assistant. How can I help you today?";
+  } 
+  
+  if (message.includes("register") || message.includes("tin")) {
+    return "🧾 To register for a personal TIN, I’ll need your full name, email, and address. Would you like to start the process? Kindly go to the TIN section";
+  } 
+  
+  if (message.includes("tax") && message.includes("payment")) {
+    return "💰 You can make your tax payment directly through the FIRS portal or our app’s payment section.";
+  }
+
+  if (message.includes("deadline") || message.includes("due date")) {
+    return "⏰ Tax filing deadlines vary by type. Personal income tax is usually due by March 31st each year.";
+  }
+
+  if (message.includes("receipt") || message.includes("proof")) {
+    return "📄 Once payment is confirmed, you’ll receive a PDF receipt via email automatically.";
+  }
+
+  if (message.includes("help") || message.includes("support")) {
+    return "🙋 Sure! Tell me what you need help with — registration, payment, or general tax info?";
+  }
+
+  // Default / fallback
+  return "🤖 I didn’t quite catch that. You can ask me things like ‘register TIN’, ‘tax payment’, or ‘deadline’.";
+};
+
 export default function Contact() {
   const [messages, setMessages] = useState<Message[]>([
     { id: '1', text: "How may we help you ...?", from: "bot", timestamp: Date.now() },
   ]);
   
   const flatListRef = useRef<FlatList>(null);
-  const [botRepling , setBot] = useState("")
 
   const handleSend = (text: string) => {
 
@@ -69,11 +99,7 @@ export default function Contact() {
       timestamp: Date.now()
     };
 
-    if(text.includes("Hello")){
-      setBot("Welcome To Taxparata")
-    } else {
-      setBot("Thanks for your message! We'll get back to you soon.")
-    }
+   const botReplying = getBotReply(text=text)
     
     setMessages((prev) => [...prev, newMessage]);
 
@@ -86,7 +112,7 @@ export default function Contact() {
     setTimeout(() => {
       const botReply: Message = {
         id: (Date.now() + 1).toString(),
-        text: botRepling,
+        text: botReplying,
         from: "bot",
         timestamp: Date.now()
       };

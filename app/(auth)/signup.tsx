@@ -16,10 +16,12 @@ import '@/assets/auth_images/google-color-icon.png';
 import {
   GoogleSignin,
   statusCodes,
+  isSuccessResponse
 } from '@react-native-google-signin/google-signin'
 
 import { supabase } from "@/configings/supaConfig"
 
+import { useAuth } from '@/configings/profileContext/profileCon';
 const TopShow = ()=>{
   return(
     <>
@@ -45,10 +47,8 @@ const InputFeilds = ()=>{
     const [validatepass , setValidpass] = useState(false);
     const [showPass , setShow] = useState(false);
 
-    GoogleSignin.configure({
-            webClientId: '167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com',
-    })
 
+    const {setUser} = useAuth() as any
 
     const googleOAuth = async () => {
             try {
@@ -57,20 +57,29 @@ const InputFeilds = ()=>{
               const response = await GoogleSignin.signIn()
               console.log(response)
 
+              if (isSuccessResponse(response)) {
+                // const { data, error } = await supabase.auth.signInWithIdToken({
+                //   provider: 'google',
+                //   token: `${response?.data?.idToken}`,
+                // })
+                Toast.success("Signup successfull","top")
+                console.log(response?.data.user)
+                  setUser({
+                    "name":response?.data?.user?.name,
+                    "email":response?.data?.user?.email
+                  })
+                  const timer = setTimeout(()=>{
+                    router.replace("/mainapp/mainIndex")
+                  }, 1000)
 
-              const idToken = response?.data?.idToken
-              if (idToken) {
-                const { data, error } = await supabase.auth.signInWithIdToken({
-                  provider: 'google',
-                  token: `${response?.data?.idToken}`,
-                })
-                console.log(error, data)
+                  return ()=>clearTimeout(timer)
+                
               }
             } catch (error: any) {
               if (error.code === statusCodes.IN_PROGRESS) {
-                // operation (e.g. sign in) is in progress already
+                Toast.info("Google Auth in progress","top")
               } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                // play services not available or outdated
+                Toast.warn("Google Service unavailable","top")
               } else {
                 // some other error happened
                 console.log(error);

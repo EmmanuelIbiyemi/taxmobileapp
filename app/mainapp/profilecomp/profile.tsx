@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, Alert, Modal , Pressable } from "react-native";
 import { LogOut, Settings, Mail, User, ShieldCheck } from "lucide-react-native";
 import { router } from "expo-router";
 
 
 import { useAuth } from "@/configings/profileContext/profileCon";
+
+import TermsModal from "./terms";
+
 export default function UserProfile() {
 
     const { userinfo } = useAuth() as any
+    const [showTerms , setTerms] = useState(false)
 
   const user = {
     name: userinfo?.name,
@@ -35,34 +39,27 @@ export default function UserProfile() {
 
       {/* Menu Section */}
       <View className="w-[90%] mt-6">
-        {[
-          { icon: User, title: "My Profile" },
-          { icon: Mail, title: "Messages", badge: 2 , paths:''},
-          { icon: Settings, title: "Settings" , paths:'/mainapp/profilecomp/setting'},
-          { icon: ShieldCheck, title: "Terms & Privacy Policy" , paths:true},
-        ].map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            activeOpacity={0.9}
-            className="bg-white rounded-2xl flex-row items-center p-[20px] my-2 border border-gray-200"
+        
+        <TouchableOpacity 
+            activeOpacity={1} 
+            onPress={()=>setTerms(true)}>
+          <View 
+            className="bg-white rounded-2xl flex-row items-center p-[20px] my-2 border border-gray-200 gap-3"
             style={{
               shadowColor: "green",
               shadowOpacity: 0.1,
               shadowRadius: 4,
               elevation: 3,
             }}
-            onPress={()=>router.navigate(`${item.paths}`)}
           >
-            <item.icon color="#16a34a" size={22} />
-            <Text className="ml-4 text-[16px] text-[#1a1a1a] flex-1">{item.title}</Text>
-
-            {item.badge && (
-              <View className="bg-emerald-600 rounded-full px-2 py-[2px]">
-                <Text className="text-white text-[12px]">{item.badge}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        ))}
+            <ShieldCheck 
+              color={'#059669'}
+            />
+            <Text>
+              Terms & Privacy Policy
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* Logout Button */}
@@ -70,6 +67,8 @@ export default function UserProfile() {
         <LogOut color="#dc2626" size={20} />
         <Text className="text-red-600 ml-2 font-semibold">Logout</Text>
       </TouchableOpacity>
+
+      <TermsModal visiblity={showTerms} setvisiblity={setTerms}/>
     </ScrollView>
   );
 }

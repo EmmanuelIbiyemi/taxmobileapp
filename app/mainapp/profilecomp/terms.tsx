@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { Modal, View, Text, Pressable, ScrollView } from 'react-native';
 
 
-const TermsModal = ( visible: boolean, onClose: any ) => {
+interface showTerms{
+  visiblity:boolean
+  setvisiblity: any
+}
+
+const TermsModal = ({visiblity , setvisiblity}: showTerms) => {
   return (
-    <Modal visible={visible} animationType="slide" transparent={true}>
+    <Modal visible={visiblity} animationType="slide" transparent={true}>
       <View className="flex-1 bg-black/50 justify-center px-5">
         <View className="bg-white rounded-xl p-6 max-h-[80%]">
           <ScrollView>
@@ -21,8 +26,8 @@ const TermsModal = ( visible: boolean, onClose: any ) => {
             </Text>
 
             <Pressable
-              className="bg-blue-600 rounded-full py-3 px-6 items-center"
-              onPress={onClose}
+              className="bg-emerald-600 rounded-full py-3 px-6 items-center"
+              onPress={()=>setvisiblity(false)}
             >
               <Text className="text-white font-semibold text-base">I Agree</Text>
             </Pressable>

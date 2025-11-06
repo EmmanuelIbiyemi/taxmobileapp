@@ -8,11 +8,17 @@ import React, { useCallback, useEffect } from "react";
 
 import { AuthProvider } from "@/configings/profileContext/profileCon"
 
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 export default function RootLayout() {
 
   useEffect(()=>{
     NavigationBar.setButtonStyleAsync('dark')
-  })
+    GoogleSignin.configure({
+              webClientId: '167960938593-afm6gcf2ejp920elo1e1uniagsvfaujh.apps.googleusercontent.com',
+              iosClientId:'167960938593-ivmc62af96lrcsko8ha9s6pvc6bfrvuv.apps.googleusercontent.com',
+              profileImageSize:100
+          })
+  }, [])
 
   useFocusEffect(
     useCallback(() => {
